@@ -1,7 +1,7 @@
 (function() {
   var app = angular.module("weatherpicsApp", ["ui.bootstrap", "modalControllers"]);
   
-  app.controller("WeatherpicsController", function($modal) {
+  app.controller("WeatherpicsController", ['$modal', function($modal) {
     this.pics = pics;
     var weatherpicsController = this;
     this.navbarCollapsed = true;
@@ -21,7 +21,7 @@
       });
 
       modalInstance.result.then(function (weatherpicFromModal) {
-        if (selectedPic != undefined) {
+        if (selectedPic) {
           var indexOfSelectedPic = weatherpicsController.pics.indexOf(selectedPic);
           if (indexOfSelectedPic > -1) {
             weatherpicsController.pics.splice(indexOfSelectedPic, 1);
@@ -50,7 +50,7 @@
         }
       });
     };
-  });
+  }]);
  
   var pics = [
               {image_url: "http://severe-wx.pbworks.com/f/tornado.jpg", caption:"Wow!"},
