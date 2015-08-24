@@ -1,0 +1,11 @@
+{
+  "name": "weatherpics-web",
+  "version": "1.0.0",
+  "description": "Weatherpics AngularFire webapp",
+  "main": "weatherpics.html",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Tyler Rockwood <rockwotj@gmail.com>",
+  "license": "MIT"
+}
