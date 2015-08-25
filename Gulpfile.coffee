@@ -25,7 +25,7 @@ gulp.task 'html', ->
 
 gulp.task 'js', ->
   return streamqueue objectMode: true,
-    gulp.src('lib/js/*.min.js'),
+    gulp.src(['lib/js/angular.min.js', 'lib/js/firebase.min.js', 'lib/js/angularfire.min.js']),
     gulp.src(['lib/js/*.js', '!lib/js/*.min.js'])
     .pipe(uglify()),
     gulp.src('js/*.js')
