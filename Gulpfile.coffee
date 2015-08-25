@@ -26,7 +26,7 @@ gulp.task 'html', ->
 gulp.task 'js', ->
   return streamqueue objectMode: true,
     gulp.src('lib/js/*.min.js'),
-    gulp.src('lib/js/angular-bootstrap.js')
+    gulp.src(['lib/js/*.js', '!lib/js/*.min.js'])
     .pipe(uglify()),
     gulp.src('js/*.js')
     .pipe jshint()
