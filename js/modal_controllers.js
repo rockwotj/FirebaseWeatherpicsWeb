@@ -1,20 +1,18 @@
 (function() {
   var app = angular.module("modalControllers", [ "ui.bootstrap" ]);
 
-  app.controller("InsertModalController", ['$modalInstance', '$timeout', 'picInModal', function($modalInstance, $timeout, picInModal) {
-    this.isNewPic = (picInModal === undefined); // Used in html, not here.
-    picInModal = picInModal || {};
-    this.imageUrl = picInModal.image_url || "";
-    this.caption = picInModal.caption || "";
+  app.controller("InsertModalController", ['$modalInstance', '$timeout', 'picInModal', 'updatePic', function($modalInstance, $timeout, picInModal, updatePic) {
+    this.isNewPic = (picInModal === undefined);
+    this.picInModal = picInModal || {imageUrl:"", caption:""};
 
     this.insertPic = function() {
-      picInModal.image_url = this.imageUrl;
-      picInModal.caption = this.caption;
-      $modalInstance.close(picInModal);
+      $modalInstance.close(this.picInModal);
     };
 
     this.updatePic = function() {
-
+      if (!this.isNewPic) {
+        updatePic(this.picInModal);
+      }
     };
 
     // Add comment

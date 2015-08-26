@@ -1,9 +1,17 @@
 (function() {
-  var app = angular.module("weatherpicsApp", ["ui.bootstrap", "modalControllers"]);
+  var app = angular.module("weatherpicsApp", ["ui.bootstrap", "modalControllers", "firebase"]);
   
-  app.controller("WeatherpicsController", ['$modal', function($modal) {
-    this.pics = pics;
+  app.controller("WeatherpicsController", ['$modal', '$firebaseArray', function($modal, $firebaseArray) {
+    var weatherpicsRef = new Firebase("https://<YOUR-USERNAME-HERE>-weatherpics.firebaseio.com/weatherpics");
+    this.pics = $firebaseArray(weatherpicsRef);
+
     var weatherpicsController = this;
+
+    var compare = function(a, b) {
+      return a.$id < b.$id;
+    };
+    this.pics.$watch(function() { weatherpicsController.pics.sort(compare); });
+
     this.navbarCollapsed = true;
     
     this.showInsertPicDialog = function(selectedPic) {
@@ -16,18 +24,20 @@
         resolve: {
           picInModal: function () {
             return selectedPic;
+          },
+          updatePic: function () {
+            return weatherpicsController.pics.$save;
           }
         }
       });
 
       modalInstance.result.then(function (weatherpicFromModal) {
-        if (selectedPic) {
-          var indexOfSelectedPic = weatherpicsController.pics.indexOf(selectedPic);
-          if (indexOfSelectedPic > -1) {
-            weatherpicsController.pics.splice(indexOfSelectedPic, 1);
-          }
+        if (!selectedPic) {
+          weatherpicsController.pics.$add(weatherpicFromModal);
+        } else {
+          weatherpicsController.pics.$save(weatherpicFromModal);
         }
-        weatherpicsController.pics.unshift(weatherpicFromModal);
+        weatherpicsController.isEditing = false;
       });
     };
 
@@ -44,19 +54,10 @@
       });
 
       modalInstance.result.then(function () {
-        var indexOfSelectedPic = weatherpicsController.pics.indexOf(selectedPic);
-        if (indexOfSelectedPic > -1) {
-          weatherpicsController.pics.splice(indexOfSelectedPic, 1);
-        }
+        weatherpicsController.pics.$remove(selectedPic);
+        weatherpicsController.isEditing = false;
       });
     };
   }]);
  
-  var pics = [
-              {image_url: "http://severe-wx.pbworks.com/f/tornado.jpg", caption:"Wow!"},
-              {image_url: "http://upload.wikimedia.org/wikipedia/commons/6/6b/Mount_Carmel_forest_fire14.jpg", caption:"Big fire"},
-              {image_url: "http://www.duskyswondersite.com/wp-content/uploads/2011/02/weather-cloud-32.jpg", caption:"Clouds"},
-              ];
-  
-  
 })();
